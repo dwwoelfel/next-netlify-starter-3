@@ -7,10 +7,11 @@ export default async function handler(req, res) {
     console.log(res.revalidate);
     console.log(res.revalidate.toString());
     const revalidateResult = await res.revalidate('/posts/1');
-    return res.json({ revalidated: true });
+    console.log('revalidateResult', revalidateResult);
+    return res.json({revalidated: true});
   } catch (err) {
     // If there was an error, Next.js will continue
     // to show the last successfully generated page
-    return res.status(500).send("Error revalidating");
+    return res.status(500).send('Error revalidating');
   }
 }
