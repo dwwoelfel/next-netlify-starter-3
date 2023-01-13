@@ -1,11 +1,13 @@
 import Link from "next/link";
 
 export async function getStaticProps(props) {
+  const now = Date.now();
   console.log(new Error("test"));
-  console.log("getStaticProps", props);
+  console.log("getStaticProps", now, new Date(now).toLocaleTimeString(), props);
   return {
     props: {
-      serverGenerated: Date.now(),
+      serverGenerated: now,
+      dateS: new Date(now).toLocaleString(),
       id: parseInt(props.params.id, 10),
     },
     // Next.js will attempt to re-generate the page:
