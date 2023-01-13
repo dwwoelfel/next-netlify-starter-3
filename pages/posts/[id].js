@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 export async function getStaticProps(props) {
+  console.log(new Error("test"));
   console.log("getStaticProps", props);
   return {
     props: {
