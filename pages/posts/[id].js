@@ -1,9 +1,11 @@
-export async function getStaticProps(x) {
-  console.log("getStaticProps", x);
+import Link from "next/link";
+
+export async function getStaticProps(props) {
+  console.log("getStaticProps", props);
   return {
     props: {
-      x: 1,
       serverGenerated: Date.now(),
+      id: parseInt(props.params.id, 10),
     },
     // Next.js will attempt to re-generate the page:
     // - When a request comes in
@@ -19,11 +21,14 @@ export async function getStaticPaths() {
   return { paths: [{ params: { id: "1" } }], fallback: "blocking" };
 }
 
-export default function Page({ x, serverGenerated }) {
+export default function Page({ id, serverGenerated }) {
   return (
     <div>
       <div>Generated at {new Date(serverGenerated).toLocaleString()}</div>
-      <div>x: {x}</div>
+      <div>Id: {id}</div>
+      <div>
+        <Link href={`/posts/${id + 1}`}>{id + 1}</Link>
+      </div>
     </div>
   );
 }
