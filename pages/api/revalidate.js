@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     // e.g. for "/blog/[slug]" this should be "/blog/post-1"
     console.log(res.revalidate);
     console.log(res.revalidate.toString());
-    await res.revalidate("/posts/1");
+    const revalidateResult = await res.revalidate('/posts/1');
     return res.json({ revalidated: true });
   } catch (err) {
     // If there was an error, Next.js will continue
