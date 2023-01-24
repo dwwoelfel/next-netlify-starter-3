@@ -1,9 +1,7 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 export async function getStaticProps(props) {
   const now = Date.now();
-  console.log(new Error("test"));
-  console.log("getStaticProps", now, new Date(now).toLocaleTimeString(), props);
   return {
     props: {
       serverGenerated: now,
@@ -21,17 +19,22 @@ export async function getStaticPaths() {
   // We'll pre-render only these paths at build time.
   // { fallback: blocking } will server-render pages
   // on-demand if the path doesn't exist.
-  return { paths: [{ params: { id: "1" } }], fallback: "blocking" };
+  return {paths: [{params: {id: '1'}}], fallback: 'blocking'};
 }
 
-export default function Page({ id, serverGenerated }) {
+export default function Page({id, serverGenerated}) {
   return (
-    <div>
-      <div>Generated at {new Date(serverGenerated).toLocaleString()}</div>
-      <div>Id: {id}</div>
+    <center>
       <div>
-        <Link href={`/posts/${id + 1}`}>{id + 1}</Link>
+        <h2>
+          Post {id} generated at{' '}
+          {new Date(serverGenerated).toLocaleTimeString()}
+        </h2>
+
+        <div>
+          <Link href={`/posts/${id + 1}`}>{`Go to page ${id + 1}`}</Link>
+        </div>
       </div>
-    </div>
+    </center>
   );
 }
