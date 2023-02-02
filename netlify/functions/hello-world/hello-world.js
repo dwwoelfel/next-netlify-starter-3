@@ -1,3 +1,5 @@
+const fetch = require('node-fetch');
+
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 const handler = async (event, context) => {
   console.log('event', event);
