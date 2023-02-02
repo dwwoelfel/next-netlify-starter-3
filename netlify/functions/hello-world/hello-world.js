@@ -1,22 +1,40 @@
-import fetch from 'node-fetch';
+function runRefresh(token) {
+  return new Promise((resolve, reject) => {
+    const body = JSON.stringify({paths: ['/abcd']});
+    let data = '';
+    const req = https.request(
+      {
+        hostname: 'api.netlify.com',
+        port: 443,
+        path: '/api/v1/sites/40ce9daa-744e-471e-ba5c-afa7cbac4c42/refresh_on_demand_builders',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': body.length,
+        },
+      },
+      (res) => {
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+        res.on('end', () => {
+          resolve(JSON.parse(data));
+        });
+      },
+    );
+    req.write(body);
+    req.end();
+  });
+}
 
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 const handler = async (event, context) => {
   console.log('event', event);
   console.log('context', context);
   try {
-    const res = await fetch(
-      'https://api.netlify.com/api/v1/sites/40ce9daa-744e-471e-ba5c-afa7cbac4c42/refresh_on_demand_builders',
-      {
-        method: 'POST',
-        body: JSON.stringify({paths: ['/abcd']}),
-        headers: {
-          'content-type': 'application/json',
-          Authorization: `Bearer ${context.clientContext.custom.odb_refresh_hooks}`,
-        },
-      },
+    const json = await runRefresh(
+      'context.clientContext.custom.odb_refresh_hooks',
     );
-    const json = await res.json();
     console.log('res', json);
     const subject = event.queryStringParameters.name || 'World';
     return {
