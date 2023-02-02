@@ -13,6 +13,7 @@ function runRefresh(token) {
         headers: {
           'Content-Type': 'application/json',
           'Content-Length': body.length,
+          Authorization: `Bearer ${token}`,
         },
       },
       (res) => {
