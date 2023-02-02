@@ -9,7 +9,7 @@ const handler = async (event, context) => {
       'https://api.netlify.com/api/v1/sites/40ce9daa-744e-471e-ba5c-afa7cbac4c42/refresh_on_demand_builders',
       {
         method: 'POST',
-
+        body: JSON.stringify({paths: ['/abcd']}),
         headers: {
           'content-type': 'application/json',
           Authorization: `Bearer ${context.clientContext.custom.odb_refresh_hooks}`,
