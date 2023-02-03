@@ -37,7 +37,7 @@ const handler = async (event, context) => {
   console.log('context', context);
   try {
     const json = await runRefresh(
-      'context.clientContext.custom.odb_refresh_hooks',
+      context.clientContext.custom.odb_refresh_hooks,
     );
     console.log('res', json);
     const subject = event.queryStringParameters.name || 'World';
