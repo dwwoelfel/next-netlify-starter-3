@@ -1,6 +1,7 @@
 import https from 'https';
 
 function runRefresh(token) {
+  console.log('running refresh with', token);
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({paths: ['/abcd']});
     let data = '';
