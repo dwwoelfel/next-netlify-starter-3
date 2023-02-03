@@ -1,9 +1,9 @@
 import https from 'https';
 
-function runRefresh(token) {
+function runRefresh({domain, token}) {
   console.log('running refresh with', token);
   return new Promise((resolve, reject) => {
-    const body = JSON.stringify({paths: ['/abcd']});
+    const body = JSON.stringify({paths: ['/abcd'], domain});
     let data = '';
     const req = https.request(
       {
@@ -36,9 +36,10 @@ const handler = async (event, context) => {
   console.log('event', event);
   console.log('context', context);
   try {
-    const json = await runRefresh(
-      context.clientContext.custom.odb_refresh_hooks,
-    );
+    const json = await runRefresh({
+      domain: event.headers.host,
+      token: context.clientContext.custom.odb_refresh_hooks,
+    });
     console.log('res', json);
     const subject = event.queryStringParameters.name || 'World';
     return {
