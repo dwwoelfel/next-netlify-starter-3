@@ -1,8 +1,7 @@
 import https from 'https';
 
 function runRefresh({domain, token}) {
-  console.log(JSON.stringify(process.env), null, 2)
-  const siteId = process.env.NETLIFY_SITE_ID;
+  const siteId = process.env.SITE_ID;
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({paths: ['/abcd'], domain});
     let data = '';
@@ -32,7 +31,6 @@ function runRefresh({domain, token}) {
   });
 }
 
-// Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 const handler = async (event, context) => {
   try {
     const odbRefreshToken = context.clientContext.custom.odb_refresh_hooks;
