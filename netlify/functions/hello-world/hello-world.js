@@ -1,7 +1,7 @@
 import https from 'https';
 
 function runRefresh({domain, token}) {
-  console.log('running refresh with', token);
+  const siteId = process.env.NETLIFY_SITE_ID;
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({paths: ['/abcd'], domain});
     let data = '';
@@ -9,7 +9,7 @@ function runRefresh({domain, token}) {
       {
         hostname: 'api.netlify.com',
         port: 443,
-        path: '/api/v1/sites/40ce9daa-744e-471e-ba5c-afa7cbac4c42/refresh_on_demand_builders',
+        path: `/api/v1/sites/${siteId}/refresh_on_demand_builders`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,25 +33,23 @@ function runRefresh({domain, token}) {
 
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 const handler = async (event, context) => {
-  console.log('event', event);
-  console.log('context', context);
   try {
+    const odbRefreshToken = context.clientContext.custom.odb_refresh_hooks;
+    if (!odbRefreshToken) {
+      return {
+        statusCode: 400,
+        body: 'refresh hooks not enabled for site in proxy',
+      };
+    }
+
     const json = await runRefresh({
       domain: event.headers.host,
-      token: context.clientContext.custom.odb_refresh_hooks,
+      token: odbRefreshToken,
     });
-    console.log('res', json);
-    const subject = event.queryStringParameters.name || 'World';
+
     return {
       statusCode: 200,
-      body: JSON.stringify(
-        {message: `Hello ${subject}`, refreshResult: json},
-        null,
-        2,
-      ),
-      // // more keys you can return:
-      // headers: { "headerName": "headerValue", ... },
-      // isBase64Encoded: true,
+      body: JSON.stringify({refreshResult: json}, null, 2),
     };
   } catch (error) {
     return {statusCode: 500, body: error.toString()};
