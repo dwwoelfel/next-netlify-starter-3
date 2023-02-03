@@ -1,6 +1,7 @@
 import https from 'https';
 
 function runRefresh({domain, token}) {
+  console.log(JSON.stringify(process.env), null, 2)
   const siteId = process.env.NETLIFY_SITE_ID;
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({paths: ['/abcd'], domain});
