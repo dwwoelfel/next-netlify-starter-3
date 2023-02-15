@@ -8,7 +8,7 @@ export async function getStaticProps(props) {
       dateS: new Date(now).toLocaleString(),
       id: parseInt(props.params.id, 10),
     },
-    revalidate: 60,
+    revalidate: parseInt(props.params.id, 10) * 10,
   };
 }
 
