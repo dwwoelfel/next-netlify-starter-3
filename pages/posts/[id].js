@@ -16,7 +16,7 @@ export async function getStaticPaths() {
   // We'll pre-render only these paths at build time.
   // { fallback: blocking } will server-render pages
   // on-demand if the path doesn't exist.
-  const ids = [...new Array(100)].map((x, i ) => i)
+  const ids = [...new Array(100)].map((x, i ) => i + 1)
   return {paths: ids.map(id => ({params: {id: id.toString()}})), fallback: 'blocking'};
 }
 
