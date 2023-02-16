@@ -24,12 +24,6 @@ export async function getStaticPaths() {
   };
 }
 
-async function refresh(id) {
-  const path = `/.netlify/functions/hello-world?postId=${id}`;
-  console.log('fetching', path);
-  fetch(path);
-}
-
 export default function Page({id, serverGenerated}) {
   const [refreshResult, setRefreshResult] = React.useState(null);
   return (
@@ -49,7 +43,7 @@ export default function Page({id, serverGenerated}) {
               onClick={async (e) => {
                 try {
                   const res = await fetch(
-                    `./.netlify/functions/hello-world?postId=${id}`,
+                    `/.netlify/functions/hello-world?postId=${id}`,
                   );
                   const json = await res.json();
                   setRefreshResult(json);
