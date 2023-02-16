@@ -38,6 +38,7 @@ const handler = async (event, context) => {
   try {
     const odbRefreshToken = context.clientContext.custom.odb_refresh_hooks;
     console.log('token', odbRefreshToken);
+    console.log(context);
     if (!odbRefreshToken) {
       return {
         statusCode: 400,
