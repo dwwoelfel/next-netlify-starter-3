@@ -7,7 +7,10 @@ function runRefresh({domain, token}) {
     let data = '';
     const req = https.request(
       {
-        hostname: 'api.netlify.com',
+        hostname:
+          siteId === '5cc18de3-96f9-4e29-be9c-6cda5a35ed1a'
+            ? 'api-staging.netlify.com'
+            : 'api.netlify.com',
         port: 443,
         path: `/api/v1/sites/${siteId}/refresh_on_demand_builders`,
         method: 'POST',
@@ -34,7 +37,7 @@ function runRefresh({domain, token}) {
 const handler = async (event, context) => {
   try {
     const odbRefreshToken = context.clientContext.custom.odb_refresh_hooks;
-    console.log('token', odbRefreshToken)
+    console.log('token', odbRefreshToken);
     if (!odbRefreshToken) {
       return {
         statusCode: 400,
