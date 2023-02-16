@@ -1,9 +1,9 @@
 import https from 'https';
 
-function runRefresh({domain, token}) {
+function runRefresh({postId, domain, token}) {
   const siteId = process.env.SITE_ID;
   return new Promise((resolve, reject) => {
-    const body = JSON.stringify({paths: ['/abcd'], domain});
+    const body = JSON.stringify({paths: [`/posts/${postId}`], domain});
     let data = '';
     const req = https.request(
       {
@@ -37,6 +37,7 @@ function runRefresh({domain, token}) {
 const handler = async (event, context) => {
   try {
     const odbRefreshToken = context.clientContext.custom.odb_refresh_hooks;
+    console.log(JSON.stringify(process.env, null, 2));
     console.log('token', odbRefreshToken);
     console.log(context);
     if (!odbRefreshToken) {
@@ -46,14 +47,21 @@ const handler = async (event, context) => {
       };
     }
 
+    const postId = parseInt(event.queryStringParameters.postId || '1');
+
     const json = await runRefresh({
       domain: event.headers.host,
       token: odbRefreshToken,
+      postId,
     });
 
     return {
       statusCode: 200,
-      body: JSON.stringify({refreshResult: json}, null, 2),
+      body: JSON.stringify(
+        {refreshResult: json, refreshedPostId: postId},
+        null,
+        2,
+      ),
     };
   } catch (error) {
     return {statusCode: 500, body: error.toString()};
