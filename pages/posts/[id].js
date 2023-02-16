@@ -16,11 +16,19 @@ export async function getStaticPaths() {
   // We'll pre-render only these paths at build time.
   // { fallback: blocking } will server-render pages
   // on-demand if the path doesn't exist.
-  const ids = [...new Array(100)].map((x, i ) => i + 1)
-  return {paths: ids.map(id => ({params: {id: id.toString()}})), fallback: 'blocking'};
+  const ids = [...new Array(100)].map((x, i) => i + 1);
+  return {
+    paths: ids.map((id) => ({params: {id: id.toString()}})),
+    fallback: 'blocking',
+  };
+}
+
+async function refresh(id) {
+  fetch(`./.netlify/functions/hello-world?postId=${id}`);
 }
 
 export default function Page({id, serverGenerated}) {
+  const [refreshResult, setRefreshResult] = React.useState(null);
   return (
     <center>
       <div>
@@ -32,6 +40,26 @@ export default function Page({id, serverGenerated}) {
         <div>
           <Link href={`/posts/${id + 1}`}>{`Go to page ${id + 1}`}</Link>
         </div>
+        <div>
+          <button
+            onClick={async (e) => {
+              const res = await fetch(
+                `./.netlify/functions/hello-world?postId=${id}`,
+              );
+              const json = await res.json();
+              setRefreshResult(json);
+            }}
+          >
+            Run refresh hook for this page (just the html version)
+          </button>
+        </div>
+        {refreshResult ? (
+          <div>
+            <p>Result:</p>
+            <pre>{JSON.stringify(refreshResult, null, 2)}</pre>
+            <p>Refresh the page to see if the timestamp updated</p>
+          </div>
+        ) : null}
       </div>
     </center>
   );
