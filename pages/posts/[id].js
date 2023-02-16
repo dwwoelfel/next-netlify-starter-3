@@ -25,14 +25,16 @@ export async function getStaticPaths() {
 }
 
 async function refresh(id) {
-  fetch(`/.netlify/functions/hello-world?postId=${id}`);
+  const path = `/.netlify/functions/hello-world?postId=${id}`;
+  console.log('fetching', path);
+  fetch(path);
 }
 
 export default function Page({id, serverGenerated}) {
   const [refreshResult, setRefreshResult] = React.useState(null);
   return (
     <center>
-      <div>
+      <div style={{width: 400}}>
         <h2>
           Post {id} generated at{' '}
           {new Date(serverGenerated).toLocaleTimeString()}
@@ -52,6 +54,7 @@ export default function Page({id, serverGenerated}) {
                   const json = await res.json();
                   setRefreshResult(json);
                 } catch (e) {
+                  console.error(e);
                   setRefreshResult({error: e.message});
                 }
               }}
@@ -61,7 +64,7 @@ export default function Page({id, serverGenerated}) {
           </p>
         </div>
         {refreshResult ? (
-          <div>
+          <div style={{textAlign: 'left'}}>
             <p>Result:</p>
             <pre>{JSON.stringify(refreshResult, null, 2)}</pre>
             <p>Refresh the page to see if the timestamp updated</p>
