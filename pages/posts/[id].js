@@ -25,7 +25,7 @@ export async function getStaticPaths() {
 }
 
 async function refresh(id) {
-  fetch(`./.netlify/functions/hello-world?postId=${id}`);
+  fetch(`/.netlify/functions/hello-world?postId=${id}`);
 }
 
 export default function Page({id, serverGenerated}) {
@@ -42,17 +42,23 @@ export default function Page({id, serverGenerated}) {
           <Link href={`/posts/${id + 1}`}>{`Go to page ${id + 1}`}</Link>
         </div>
         <div>
-          <button
-            onClick={async (e) => {
-              const res = await fetch(
-                `./.netlify/functions/hello-world?postId=${id}`,
-              );
-              const json = await res.json();
-              setRefreshResult(json);
-            }}
-          >
-            Run refresh hook for this page (just the html version)
-          </button>
+          <p>
+            <button
+              onClick={async (e) => {
+                try {
+                  const res = await fetch(
+                    `./.netlify/functions/hello-world?postId=${id}`,
+                  );
+                  const json = await res.json();
+                  setRefreshResult(json);
+                } catch (e) {
+                  setRefreshResult({error: e.message});
+                }
+              }}
+            >
+              Run refresh hook for this page (just the html version)
+            </button>
+          </p>
         </div>
         {refreshResult ? (
           <div>
