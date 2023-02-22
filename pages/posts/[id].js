@@ -35,7 +35,7 @@ export default function Page({id, serverGenerated}) {
         </h2>
 
         <div>
-          <Link href={`/posts/${id + 1}`}>{`Go to page ${id + 1}`}</Link>
+          <Link href={`/posts/${id + 1}`}>{`GO TO PAGE ${id + 1}`}</Link>
         </div>
         <div>
           <p>
