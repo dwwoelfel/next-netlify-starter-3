@@ -11,7 +11,8 @@ const originalResponse = {
 async function handler(event, context) {
   if (event.path.endsWith('gzip')) {
     const compressed = await gzip(originalResponse.body);
-    return {...originalResponse, body: compressed};
+    compressed.length;
+    return {...originalResponse, body: compressed.toString()};
   }
   return originalResponse;
 }
