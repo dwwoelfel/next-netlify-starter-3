@@ -1,9 +1,13 @@
 import https from 'https';
 
 function runRefresh({postId, domain, token}) {
+  console.log('token', token);
   const siteId = process.env.SITE_ID;
   return new Promise((resolve, reject) => {
-    const body = JSON.stringify({paths: [`/posts/${postId}`], domain});
+    const body = JSON.stringify({
+      paths: postId === -1 ? ['/api/test'] : [`/posts/${postId}`],
+      domain,
+    });
     let data = '';
     const req = https.request(
       {
